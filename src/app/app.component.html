@@ -1,0 +1,142 @@
+<nav class="navbar navbar-default">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1">
+				<a class="navbar-brand" >
+					<img alt="Employee Manager" src="../assets/logo.png">
+				</a>
+				<a class="navbar-brand" >
+					<p>EMPLOYEE MANAGER</p>
+				</a>
+			</div>
+		</div>
+	</div>
+</nav>
+<!-- Add Employee Box -->
+<div class="container">
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1 box-content">
+			<div class="page-header">
+				<h4>
+					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+					Add Employee
+				</h4>
+			</div>
+			<form class="form-inline" name="form" 
+			(ngSubmit)="validateEmployeeForm(firstname.valid, lastname.valid, age.valid) 
+			&& addEmployee(firstnameAdd.value, lastnameAdd.value, ageAdd.value, sexAdd.value) 
+			&& clearPristine(firstname, lastname, age)
+			"  role="form" novalidate>
+
+				<div class="form-group col-md-4" 
+				[ngClass]="{'has-success': firstname.valid && !firstname.pristine, 
+				'has-error': !firstname.valid && !firstname.pristine}" >
+					<input type="text" class="form-control has-feedback" #firstnameAdd placeholder="Firstname" 
+					required aria-describedby="addFirstnameFeedback"
+					[(ngModel)]="addForm.firstname" name="firstname"
+					#firstname="ngModel" />
+					<span *ngIf="firstname.valid" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+					<span *ngIf="firstname.valid" id="addFirstnameFeedback" class="sr-only">(success)</span>
+				</div>
+
+				<div class="form-group col-md-4" 
+				[ngClass]="{'has-success': lastname.valid && !lastname.pristine,
+				'has-error': !lastname.valid && !lastname.pristine}">
+					<input type="text" class="form-control" #lastnameAdd placeholder="Lastname"
+					required aria-describedby="addLastnameFeedback"
+					[(ngModel)]="addForm.lastname" name="lastname"
+					#lastname="ngModel" />
+					<span *ngIf="lastname.valid" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+					<span *ngIf="lastname.valid" id="addLastnameFeedback" class="sr-only">(success)</span>
+				</div>
+
+				<div class="form-group col-md-1" 
+				[ngClass]="{'has-success': age.valid && !age.pristine, 
+				'has-error': !age.valid && !age.pristine}">
+					<input type="number" class="form-control" #ageAdd placeholder="Age" required aria-describedby="addAgeFeedback"
+					[(ngModel)]="addForm.age" name="age"
+					#age="ngModel" />
+					<span *ngIf="age.valid" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+					<span *ngIf="age.valid" id="addAgeFeedback" class="sr-only">(success)</span>
+				</div>
+
+				<div class="form-group col-md-2">
+					<select class="form-control" #sexAdd>
+						<option>Male</option>
+						<option>Female</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-re-sm">
+						<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+	<!-- Employees List Box -->
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1 box-content">
+			<div class="page-header">
+				<h4>
+					<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+					Employees List
+				</h4>
+			</div>
+
+			<div *ngFor="let employee of employees | async; let i=index ">
+				<form class="form-inline" (ngSubmit)="validateEmployeeForm(firstname.valid, lastname.valid, age.valid) && updateEmployee(employee.$key, firstnameUpdate.value, lastnameUpdate.value, ageUpdate.value, sexUpdate.value)"  ngForm="" novalidate>
+					<div class="form-group col-md-4" 
+					[ngClass]="{'has-success': firstname.valid && !firstname.pristine,  
+					'has-error': !firstname.valid && !firstname.pristine}">
+						<input type="text" class="form-control" #firstnameUpdate [value]="employee.firstname"
+						required aria-describedby="addFirstnameFeedback"
+						[(ngModel)]="employee.firstname" name="firstname"
+						#firstname="ngModel"/>
+						<span *ngIf="firstname.valid && !firstname.pristine" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+						<span *ngIf="firstname.valid && !firstname.pristine" id="addFirstnameFeedback" class="sr-only">(success)</span>
+					</div>
+
+					<div class="form-group col-md-4" 
+					[ngClass]="{'has-success': lastname.valid && !lastname.pristine, 
+					'has-error': !lastname.valid && !lastname.pristine}">
+						<input type="text" class="form-control" #lastnameUpdate [value]="employee.lastname"
+						required aria-describedby="addLastnameFeedback"
+						[(ngModel)]="employee.lastname" name="lastname"
+						#lastname="ngModel"/>
+						<span *ngIf="lastname.valid && !lastname.pristine" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+						<span *ngIf="lastname.valid && !lastname.pristine" id="addLastnameFeedback" class="sr-only">(success)</span>
+					</div>
+					<div class="form-group col-md-1" 
+					[ngClass]="{'has-success': age.valid && !age.pristine, 
+					'has-error': !age.valid && !age.pristine}">
+						<input type="number" class="form-control" min="1" max="120" #ageUpdate [value]="employee.age" required aria-describedby="addAgeFeedback"
+						[(ngModel)]="employee.age" name="age"
+						#age="ngModel" />
+						<span *ngIf="age.valid && !age.pristine" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+						<span *ngIf="age.valid && !age.pristine" id="addAgeFeedback" class="sr-only">(success)</span>
+					</div>
+					<div class="form-group col-md-2">
+						<select class="form-control" #sexUpdate [value]="employee.sex">
+							<option>Male</option>
+							<option>Female</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary btn-sq-sm">
+							<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+						</button>
+					</div>
+					<div class="form-group">
+						<button type='button' (click)="confirmDialogue('Comfirm to delete?') && deleteEmployee(employee.$key)" class="btn btn-danger btn-sq-sm">
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+						</button>
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+</div>
